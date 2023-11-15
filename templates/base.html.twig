@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="dark">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        
+        <style>
+            {% block stylesheets %}
+                {{ encore_entry_link_tags('app') }}
+            {% endblock %}
+        </style>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+        <link href="/dist/output.css" rel="stylesheet">
+        <script src='https://cdn.tailwindcss.com'></script>
+    </head>
+    <body class='bg-gray-500 text-orange-700 m-10 dark:bg-gray-900'>
+
+        {% block navbar %}
+            <div class="flex justify-between items-center text-sm text-gray-400 dark:text-gray-500 mx-4 pt-3">
+                <div>
+                    <a href="{{ path('micro_post_all') }}">
+                        <img src="{{ asset('logo.svg') }}" alt="logo du site" />
+                    </a>
+                </div>
+                <div class="flex">
+                    {% if app.request.attributes.get('_route') == 'micro_post_show' %}
+                        <a href='{{ path('micro_post_edit', { post: post.id }) }}' class="mr-4 text-xl">✏️</a>
+                    {% endif %}
+                    <a href='{{ path('micro_post_add') }}' class="mr-4 text-xl">💌</a>
+                    <a href="{# {{ path('login') }} #}" class="mr-2 pt-1 text-xs">Login || Registration</a>
+                    <div class="flex">
+                        <button onclick="changeTheme(\'light\')">☀️</button>
+                        <button onclick="changeTheme(\'dark\')">🌑</button>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+
+        <div class='w-full md:w-2/3 mx-auto mb-4 flex justify-between items-center'>
+            {# flash message part #}
+            <div class='w-full md:w-2/3 mx-auto'>
+                {% set typesWithColors = {
+                    'success': 'forestgreen',
+                    'error': 'red',
+                    'warning': 'orange'
+                } %}
+                
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        {% set backgroundColor = typesWithColors[type] ?? 'yellow' %}
+                        <div class='flash_msg' style="background: {{ backgroundColor }}; color: white; width: 33%; text-align: center; margin: auto; position: absolute; top: 4px; left: 0; right: 0; border-radius: 4px; padding-bottom: 2px">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {# end flash message part #}
+        </div>
+
+        {% block body %}{% endblock %}
+
+        <script>
+            {# flash message hidder #}
+            let flash_msg = document.querySelector('.flash_msg')
+            setTimeout(() => {
+                flash_msg.style.display = 'none'
+            }, 5000)
+            {# end flash message hidder #}
+        
+            {% block javascript %}{% endblock %}
+        </script>
+    </body>
+</html>
