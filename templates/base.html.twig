@@ -18,8 +18,13 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-        <link href="/dist/output.css" rel="stylesheet">
-        <script src='https://cdn.tailwindcss.com'></script>
+
+        {# tailwind #}
+        {# <script src="https://cdn.tailwindcss.com"></script> #}
+        {# <link href="/dist/output.css" rel="stylesheet"> #}
+        <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        {# <script>tailwind.config = { darkMode: 'class' }</script> #}
+        {# end tailwind #}
     </head>
     <body class='bg-gray-500 text-orange-700 m-10 dark:bg-gray-900'>
 
@@ -37,8 +42,9 @@
                     <a href='{{ path('micro_post_add') }}' class="mr-4 text-xl">💌</a>
                     <a href="{# {{ path('login') }} #}" class="mr-2 pt-1 text-xs">Login || Registration</a>
                     <div class="flex">
-                        <button onclick="changeTheme(\'light\')">☀️</button>
-                        <button onclick="changeTheme(\'dark\')">🌑</button>
+                        <button onclick='toggleTheme()'>
+                            <span id="themeSymbol">     </span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -65,14 +71,9 @@
 
         {% block body %}{% endblock %}
 
+        <script type="module" src='{{ asset('js/app.js') }}'></script>
+        <script src='{{ asset('js/script.js') }}'></script>
         <script>
-            {# flash message hidder #}
-            let flash_msg = document.querySelector('.flash_msg')
-            setTimeout(() => {
-                flash_msg.style.display = 'none'
-            }, 5000)
-            {# end flash message hidder #}
-        
             {% block javascript %}{% endblock %}
         </script>
     </body>
