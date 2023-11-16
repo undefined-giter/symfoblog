@@ -1,8 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% set title_form = update ?? 'Add Post' %}{{ title_form }}{% endblock %}
+{% set edit_or_create = update ?? 'New Post' %}
 
-{% block stylesheets %}
+{% block title %}
+    {{ edit_or_create }}
+{% endblock %}
+
+{% block bread %}
+    ➡️{{ edit_or_create }} {{ form.vars.value.id }}
 {% endblock %}
 
 {% block body %}
@@ -12,23 +17,20 @@
     <div>{{ form_errors(form) }}</div>
 
     <div>
-        {{ form_label(form.title, 'Enter the title') }}
-    </div>
-    <div>
-        {{ form_widget(form.title, {'attr': {'class': 'rounded-md', 'style': 'color: gray'}}) }}
+       <p></p>
+        {{ form_label(form.title, 'Enter the title', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
+        {{ form_widget(form.title, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2'}}) }}
     </div>
 
     <div>
-        {{ form_label(form.text, 'Fill your post') }}
-    </div>
-    <div>
-        {{ form_widget(form.text) }}
+        {{ form_label(form.text, 'Fill your post', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
+        {{ form_widget(form.text, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2'}}) }}
     </div>
 
     <div class="flex">
         <div class="flex-grow"></div>
         <div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-1 -mb-2">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:bg-blue-300 dark:hover:bg-blue-400 shadow-sm text-white rounded-md font-bold py-2 px-4 mt-1 -mb-2">
                 Save
             </button>
         </div>

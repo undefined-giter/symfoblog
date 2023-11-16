@@ -28,7 +28,6 @@ class MicroPostController extends AbstractController
     #[Route('/micro_post/add', name: 'micro_post_add', priority: 2)]
     public function add(Request $request, EntityManagerInterface $manager): Response
     {
-        $microPost = new MicroPost();
         $form = $this->createForm(MicroPostType::class, new MicroPost());
 
         $form->handleRequest($request);

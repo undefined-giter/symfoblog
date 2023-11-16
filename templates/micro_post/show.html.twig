@@ -2,18 +2,10 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 
+{% block bread %}
+    ➡️Post {{ post.id }}
+{% endblock %}
+
 {% block body %}
-    
-    <div class='p-4'>
-        <h3>{{ post.title }}</h3>
-        
-        <p class="text-orange-500 dark:text-orange-200">{{ post.text|nl2br|raw }}</p>
-
-        <p class="text-right text-blue-800 dark:text-blue-200"><small>{{ post.created|date('H:i') }} - {{ post.created|date('d/m/y') }}</small></p>
-
-        <p>💗<span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>0</span></p>
-    
-        <a class='text-sm text-gray-500 dark:text-gray-300'></a>
-    </div>
-
+    {{ include('micro_post/_one.html.twig', {post: post}) }}
 {% endblock %}
