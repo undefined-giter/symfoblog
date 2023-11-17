@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\MicroPost;
+use App\Entity\UserProfile;
 use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
+use App\Repository\UserProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +19,20 @@ class MicroPostController extends AbstractController
 {
 
     #[Route('/micro_post', name: 'micro_post_all')]
-    public function index(MicroPostRepository $posts, EntityManagerInterface $manager): Response
+    public function index(MicroPostRepository $posts, EntityManagerInterface $entityManager, UserProfileRepository $profiles): Response
     {
+        $user = new User();
+        $user->setEmail('fake@gmail.com');
+        $user->setPassword('1234');
+
+        $profile = new UserProfile();
+        $profile->setUser($user);
+        $entityManager->persist($profile);
+        $entityManager->flush();
+
         return $this->render('micro_post/index.html.twig', [
             'posts' => $posts->findAll(),
-            'displayed_text_caracters' => 25,            
+            'displayed_text_characters' => 25,        
         ]);
     }
 

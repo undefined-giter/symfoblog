@@ -17,8 +17,8 @@
                     </a>
                 </p>
                 <p class='text-x0 dark:text-gray-400'>
-                    {% if post.text|length > displayed_text_caracters %}
-                        {% set truncatedText = post.text|slice(0, displayed_text_caracters - 3) %}
+                    {% if post.text|length > displayed_text_characters %}
+                        {% set truncatedText = post.text|slice(0, displayed_text_characters - 3) %}
                         {{ truncatedText }}...
                     {% elseif post.text|length > 0  %}
                         {{ post.text }}
