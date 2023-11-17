@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Entity\MicroPost;
 use App\Entity\UserProfile;
@@ -21,14 +22,26 @@ class MicroPostController extends AbstractController
     #[Route('/micro_post', name: 'micro_post_all')]
     public function index(MicroPostRepository $posts, EntityManagerInterface $entityManager, UserProfileRepository $profiles): Response
     {
-        $user = new User();
-        $user->setEmail('fake@gmail.com');
-        $user->setPassword('1234');
+        // $user = new User();
+        // $user->setEmail('fake@gmail.com');
+        // $user->setPassword('1234');
 
-        $profile = new UserProfile();
-        $profile->setUser($user);
-        $entityManager->persist($profile);
-        $entityManager->flush();
+        // $profile = new UserProfile();
+        // $profile->setUser($user);
+        // $entityManager->persist($profile);
+        // $entityManager->flush();
+
+
+        // $post = new MicroPost();
+        // $post->setTitle('Hello');
+        // $post->setText('text y');
+        // $post->setCreated(new \DateTime);
+
+        // $comment = new Comment();
+        // $comment->setText('comment y');
+        // $post->addComment($comment);
+        // $entityManager->persist($post);
+        // $entityManager->flush();
 
         return $this->render('micro_post/index.html.twig', [
             'posts' => $posts->findAll(),
