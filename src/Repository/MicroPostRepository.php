@@ -21,6 +21,35 @@ class MicroPostRepository extends ServiceEntityRepository
         parent::__construct($registry, MicroPost::class);
     }
 
+
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.created', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findLatestPostsWithComments(int $limit = 15): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.created', 'DESC')
+            ->leftJoin('p.comments', 'c')
+            ->addSelect('c')
+            ->where(
+                'p.id IN (
+                    SELECT sub.id 
+                    FROM App\Entity\MicroPost sub 
+                    ORDER BY sub.created DESC
+                    )'
+            )
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    
 //    /**
 //     * @return MicroPost[] Returns an array of MicroPost objects
 //     */

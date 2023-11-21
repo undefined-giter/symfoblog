@@ -10,4 +10,6 @@
 /node_modules
 /.env
 .env
+/public/img/profils
+.public/img/profils
 ###< symfony/framework-bundle ###

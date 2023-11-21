@@ -1,35 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All Posts{% endblock %}
+{% set recents_only = attribute(_context, 'recents') is defined ? true : false %}
+
+{% block title %}
+    {{ recents_only ? 'Recents Posts' : 'All Posts' }}
+{% endblock %}
 
 {% block bread %}
-    ➡️All Posts
+    {{ recents_only ? '➡️Latests' : '➡️All Posts' }}
 {% endblock %}
 
 {% block body %}
     <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 p-4'>
     {% if posts|length > 0 %}
         {% for post in posts %}
-            <div class='block w-full bg-gray-200 rounded p-4'>
-                <p>
-                    <a href="{{ path('micro_post_show', { id: post.id }) }}">
-                        {{ post.title }}
-                    </a>
-                </p>
-                <p class='text-x0 dark:text-gray-400'>
+            <div class='cards block w-full border rounded p-4 shadow-lg' style="background-color: #0717B4">
+                <a href="{{ path('micro_post_show', { id: post.id }) }}">
+                    <p class='titles_cards pb-3 text-xl text-center font-semibold' style='color:#DD8507'>{{ post.title }}</p>
+                </a>
+                <p class='text-x0 text-gray-600'>
                     {% if post.text|length > displayed_text_characters %}
                         {% set truncatedText = post.text|slice(0, displayed_text_characters - 3) %}
                         {{ truncatedText }}...
                     {% elseif post.text|length > 0  %}
                         {{ post.text }}
                     {% else %}
-                        <p class='text-gray-700'>➡️There is no content yet.</p>
+                        🚧There is no content yet.</p>
                     {% endif  %}
                 </p>
+                {% if attribute(_context, 'recents') is defined %}
+                    {{ include('micro_post/comments.html.twig', {post: post}) }}
+                {% endif %}
             </div>
         {% endfor %}
     {% else %}
-        <p>There is no post to show yet.</p>
+        <p style='color:red'>There is no post to show yet.</p>
     {% endif %}
 </div>
 

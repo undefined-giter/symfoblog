@@ -1,0 +1,12 @@
+{% for comment in post.comments %}
+    <div class="flex items-start">
+        <img src="{{ asset('img/profils/moi2.jpg') }}" class="rounded-full mt-1.5" style="width: 32px; height: 32px;" alt="profil picture">
+        <div class="ml-2">
+            <p class="font-semibold text-purple-800 dark:text-purple-800">author</p>
+            <p class="text-xs">date</p>
+        </div>
+    </div>
+    <div class="ml-14">
+        <p>{{ comment.text }}</p>
+    </div>
+{% endfor %}

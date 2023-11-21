@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\User;
+use App\Entity\Comment;
 use App\Entity\MicroPost;
+use App\Form\CommentType;
 use App\Entity\UserProfile;
 use App\Form\MicroPostType;
+use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
-use App\Repository\UserProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UserProfileRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,32 +22,22 @@ class MicroPostController extends AbstractController
 {
 
     #[Route('/micro_post', name: 'micro_post_all')]
-    public function index(MicroPostRepository $posts, EntityManagerInterface $entityManager, UserProfileRepository $profiles): Response
+    public function index(MicroPostRepository $posts): Response
     {
-        // $user = new User();
-        // $user->setEmail('fake@gmail.com');
-        // $user->setPassword('1234');
-
-        // $profile = new UserProfile();
-        // $profile->setUser($user);
-        // $entityManager->persist($profile);
-        // $entityManager->flush();
-
-
-        // $post = new MicroPost();
-        // $post->setTitle('Hello');
-        // $post->setText('text y');
-        // $post->setCreated(new \DateTime);
-
-        // $comment = new Comment();
-        // $comment->setText('comment y');
-        // $post->addComment($comment);
-        // $entityManager->persist($post);
-        // $entityManager->flush();
-
         return $this->render('micro_post/index.html.twig', [
             'posts' => $posts->findAll(),
             'displayed_text_characters' => 25,        
+        ]);
+    }
+
+
+    #[Route('/micro_post/recents', name: 'micro_post_recents')]
+    public function recents(MicroPostRepository $posts): Response
+    {
+        return $this->render('micro_post/index.html.twig', [
+            'posts' => $posts->findLatestPostsWithComments(),
+            'displayed_text_characters' => 503,
+            'recents' => true
         ]);
     }
 
@@ -66,11 +58,11 @@ class MicroPostController extends AbstractController
 
             $this->addFlash('success','Your post has been added');
 
-            return $this->redirectToRoute('micro_post_all');
+            return $this->redirectToRoute('micro_post_recents');
         }
 
         return $this->render('micro_post/add.html.twig', [
-            'form' => $form,
+            'form' => $form
         ]);
     }
 
@@ -90,12 +82,13 @@ class MicroPostController extends AbstractController
 
             $this->addFlash('success','Your post has been updated');
 
-            return $this->redirectToRoute('micro_post_all');
+            return $this->redirectToRoute('micro_post_recents');
         }
 
         return $this->render('micro_post/add.html.twig', [
             'form' => $form,
             'update' => 'Edit Post',
+            'post' => $post
         ]);
     }
 
@@ -112,5 +105,38 @@ class MicroPostController extends AbstractController
         return $this->render('micro_post/show.html.twig', [
             'post' => $post,
         ]);
+    }
+
+
+    #[Route('/micro_post/{post}/comment', name: 'micro_post_comment')]
+    public function addComment(MicroPost $post, Request $request, CommentRepository $comment, EntityManagerInterface $manager): Response
+    {
+        $form = $this->createForm(CommentType::class, new Comment());
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $comment = $form->getData();
+            $comment->setPost($post);
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            $this->addFlash('success','Your comment has been added');
+
+            return $this->redirectToRoute(
+                'micro_post_show',
+                ['id' => $post->getId()]
+            );
+        }
+
+        return $this->render(
+            'micro_post/add.html.twig',
+            [
+                'form' => $form,
+                'post' => $post,
+                'comment' => true
+            ]
+        );
     }
 }
