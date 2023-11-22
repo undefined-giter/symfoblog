@@ -25,13 +25,13 @@ class AppFixtures extends Fixture
         $user1->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $user1,
-                'fake'
+                '1234'
             )
         );
         $manager->persist($user1);
 
         $user2 = new User();
-        $user2->setEmail('mick@gmail.com');
+        $user2->setEmail('lena@gmail.com');
         $user2->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $user2,
