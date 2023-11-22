@@ -37,7 +37,9 @@ class MicroPostController extends AbstractController
         return $this->render('micro_post/index.html.twig', [
             'posts' => $posts->findLatestPostsWithComments(),
             'displayed_text_characters' => 503,
-            'recents' => true
+            'recents' => true,
+            'max_comments_displayed' => 3,
+            'max_comments_length_displayed' => 80,
         ]);
     }
 

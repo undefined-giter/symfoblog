@@ -3,3 +3,12 @@
 @import 'tailwindcss/utilities';
 
 @tailwind utilities;
+
+*{cursor: default;}
+
+a:hover, a p:hover, a svg:hover{
+    text-decoration: none;
+    color: green !important;
+    fill: green !important;
+    cursor: pointer;
+}

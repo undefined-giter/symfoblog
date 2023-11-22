@@ -1,21 +1,39 @@
-<div class='p-4'>
-    <div class="flex justify-center">
-        <h3>{{ post.title }}</h3>
-    </div>
-    <br>
-    
-    <p>{{ post.text|nl2br|raw }}</p>
+{% set show_details = app.request.attributes.get('_route') == 'micro_post_show' ? true : false %}
 
-    <p class="text-right text-blue-800 dark:text-blue-200"><small>{{ post.created|date('H:i') }} - {{ post.created|date('d/m/y') }}</small></p>
-
-    <a href='{{ path('micro_post_comment', {post: post.id}) }}' class='text-sm text-gray-500 dark:text-gray-300'>add comment</a>
-
-    <p>💗<span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>{{ post.comments.count() }}</span></p>
-
-    {% for comment in post.comments %}
-        <div class='text-sm text-gray-800 dark:text-gray-400'>
-            <div class='rounded-full text-3xl w-8 ring-2 ring-white dark:ring-gray-600 mr-2'></div>
-            <p>{{ comment.text }}</p>
+<div class='cards block w-full border rounded p-4 shadow-lg' style="background-color: #0717B4">
+    <div class="flex items-center gap-1">
+        <img src="{{ asset('img/profils/moi2.jpg') }}" class="rounded-full" style="width: 42px" alt="profil picture">
+        <div class="flex flex-col justify-between flex-grow">
+            <div class="flex justify-between">
+                <p class="font-semibold text-purple-800 dark:text-purple-800 whitespace-nowrap pt-2"> Author</p>
+                <p class="text-xs text-blue-500">22/11/23</p>
+            </div>
+            <a href="{{ path('micro_post_show', {id: post.id}) }}" class="w-full flex items-center justify-center h-16">
+                <p class="titles_cards font-semibold text-center" style="color:#DD8507; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                    {% if post.title|length < 17 or show_details %}
+                        {{ post.title }}
+                    {% else  %}
+                        {{ post.title|slice(0, 17) ~ '...' }}
+                    {% endif %}
+                </p>
+            </a>
         </div>
-    {% endfor %}
+    </div>
+    <p class='text-x0 text-black dark:text-gray-300'>
+        {% if attribute(_context, 'displayed_text_characters') is defined %} 
+            {% if post.text|length > displayed_text_characters %}
+                {% set truncatedText = post.text|slice(0, displayed_text_characters - 3) %}
+                {{ truncatedText }}...
+            {% elseif post.text|length > 0  %}
+                {{ post.text }}
+            {% else %}
+                🚧 There is no content yet.
+            {% endif  %}
+        {% else %}
+            {{ post.text }}
+        {% endif  %}
+    </p>
+    {% if attribute(_context, 'recents') is defined or show_details %}
+        {{ include('micro_post/comments.html.twig', {post: post}) }}
+    {% endif %}
 </div>

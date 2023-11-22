@@ -12,7 +12,7 @@ const themeSymbol = document.querySelector('#themeSymbol')
 
 function toggleTheme() {
 
-    const icons = document.querySelectorAll('.icons')
+    const icons = document.querySelectorAll('.icon')
     const cards = document.querySelectorAll('.cards')
     const titles_cards = document.querySelectorAll('.titles_cards')
 

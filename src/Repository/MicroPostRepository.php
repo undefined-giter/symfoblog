@@ -34,6 +34,7 @@ class MicroPostRepository extends ServiceEntityRepository
     public function findLatestPostsWithComments(int $limit = 15): array
     {
         return $this->createQueryBuilder('p')
+            ->setMaxResults($limit)
             ->orderBy('p.created', 'DESC')
             ->leftJoin('p.comments', 'c')
             ->addSelect('c')
@@ -44,7 +45,6 @@ class MicroPostRepository extends ServiceEntityRepository
                     ORDER BY sub.created DESC
                     )'
             )
-            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
