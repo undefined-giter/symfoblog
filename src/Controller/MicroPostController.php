@@ -2,16 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Comment;
 use App\Entity\MicroPost;
 use App\Form\CommentType;
-use App\Entity\UserProfile;
 use App\Form\MicroPostType;
-use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\UserProfileRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,26 +16,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MicroPostController extends AbstractController
 {
+    private \DateTime $currentTime;
+
+    public function __construct()
+    {
+        $this->currentTime = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
+
 
     #[Route('/micro_post', name: 'micro_post_all')]
     public function index(MicroPostRepository $posts): Response
     {
         return $this->render('micro_post/index.html.twig', [
             'posts' => $posts->findAll(),
-            'displayed_text_characters' => 25,        
+            'displayed_text_characters' => 25
         ]);
     }
 
 
     #[Route('/micro_post/recents', name: 'micro_post_recents')]
-    public function recents(MicroPostRepository $posts): Response
+    public function recents(MicroPostRepository $posts, $posts_to_fetch = 4): Response
     {
         return $this->render('micro_post/index.html.twig', [
-            'posts' => $posts->findLatestPostsWithComments(),
+            'posts' => $posts->findLatestPosts($posts_to_fetch),
             'displayed_text_characters' => 503,
             'recents' => true,
             'max_comments_displayed' => 3,
             'max_comments_length_displayed' => 80,
+            'currentTime' => $this->currentTime
         ]);
     }
 
@@ -54,7 +58,7 @@ class MicroPostController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $post = $form->getData();
             $post->setCreated(new \DateTime());
-
+            $post->setAuthor($this->getUser());
             $manager->persist($post);
             $manager->flush();
 
@@ -106,25 +110,26 @@ class MicroPostController extends AbstractController
 
         return $this->render('micro_post/show.html.twig', [
             'post' => $post,
+            'currentTime' => $this->currentTime
         ]);
     }
 
 
-    #[Route('/micro_post/{post}/comment', name: 'micro_post_comment')]
-    public function addComment(MicroPost $post, Request $request, CommentRepository $comment, EntityManagerInterface $manager): Response
+    #[Route('/micro_post/{id}/comment', name: 'micro_post_comment')]
+    public function addComment(MicroPost $post, MicroPostRepository $posts, Request $request, EntityManagerInterface $manager): Response
     {
-        $form = $this->createForm(CommentType::class, new Comment());
-
+        $comment = new Comment();
+        $comment->setCreatedAt(new \DateTimeImmutable());
+        $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            $comment = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPost($post);
-
+            $comment->setAuthor($this->getUser());
             $manager->persist($comment);
             $manager->flush();
 
-            $this->addFlash('success','Your comment has been added');
+            $this->addFlash('success', 'Your comment has been added');
 
             return $this->redirectToRoute(
                 'micro_post_show',
@@ -132,13 +137,11 @@ class MicroPostController extends AbstractController
             );
         }
 
-        return $this->render(
-            'micro_post/add.html.twig',
-            [
-                'form' => $form,
-                'post' => $post,
-                'comment' => true
-            ]
-        );
+        return $this->render('micro_post/show.html.twig', [
+            'form' => $form->createView(),
+            'post' => $post,
+            'comment' => true
+        ]);
     }
+
 }

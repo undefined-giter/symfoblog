@@ -1,18 +1,19 @@
 {% set show_details = app.request.attributes.get('_route') == 'micro_post_show' ? true : false %}
+{% set comment = app.request.attributes.get('_route') == 'micro_post_comment' ? true : false %}
 
 <div class='cards block w-full border rounded p-4 shadow-lg' style="background-color: #0717B4">
     <div class="flex items-center gap-1">
         <img src="{{ asset('img/profils/moi2.jpg') }}" class="rounded-full" style="width: 42px" alt="profil picture">
         <div class="flex flex-col justify-between flex-grow">
             <div class="flex justify-between">
-                <p class="font-semibold text-purple-800 dark:text-purple-800 whitespace-nowrap pt-2"> Author</p>
-                <p class="text-xs text-blue-500">22/11/23</p>
+                <p class="font-semibold text-purple-800 dark:text-purple-800 whitespace-nowrap pt-2"> {{ post.author.email|split('@')|first|split('.')|first|split('_')|first }}</p>
+                <p class="text-xs text-blue-500">at {{ post.created|date('H') }}<small>h the {{ post.created|date('d/m') }}</small></p>
             </div>
             <a href="{{ path('micro_post_show', {id: post.id}) }}" class="w-full flex items-center justify-center h-16">
                 <p class="titles_cards font-semibold text-center" style="color:#DD8507; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
                     {% if post.title|length < 17 or show_details %}
                         {{ post.title }}
-                    {% else  %}
+                    {% else %}
                         {{ post.title|slice(0, 17) ~ '...' }}
                     {% endif %}
                 </p>
@@ -28,12 +29,22 @@
                 {{ post.text }}
             {% else %}
                 🚧 There is no content yet.
-            {% endif  %}
+            {% endif %}
         {% else %}
-            {{ post.text }}
-        {% endif  %}
+            &emsp;{{ post.text }}
+        {% endif %}
     </p>
+    <p class='m-2'>&emsp;💗<span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>0</span></p>
+    {% if show_details %}
+        <button class="w-full my-2 bg-purple-400 border-2 rounded hover:border-green-500">
+            <a href="{{ path('micro_post_comment', {id: post.id}) }}" class="block w-full p-2 text-center text-white">
+                Add Your Comment
+            </a>
+        </button>
+    {% elseif comment %}
+        {{ include('micro_post/_add_form.html.twig', {post: post}) }}
+    {% endif %}
     {% if attribute(_context, 'recents') is defined or show_details %}
-        {{ include('micro_post/comments.html.twig', {post: post}) }}
+        {{ include('micro_post/_comments.html.twig', {post: post}) }}
     {% endif %}
 </div>

@@ -1,0 +1,46 @@
+{% if post.comments|length > 0 %}
+    <p class="text-center">←→</p>
+{% endif %}
+
+{% set comments_displayed = 0 %}
+
+{% for comment in post.comments %}
+    {% set commentTimeDiff = currentTime.diff(comment.createdAt) %}
+    {% if show_details or attribute(_context, 'recents') is defined and comments_displayed < max_comments_displayed %}
+        <div>
+            {% if show_details %}
+                {{ comment.text }}
+            {% else %}
+                <p>  {{ comment.text|length > max_comments_length_displayed ? comment.text|slice(0, max_comments_length_displayed - 3) ~ '...' : comment.text }}</p>
+            {% endif %}
+        </div>
+        <div class="flex justify-end">
+            <div class="w-full flex items-start">
+                <div class="flex-grow overflow-hidden text-right">
+                    <p class="font-semibold text-purple-800 dark:text-purple-800 whitespace-nowrap">{{ comment.author.email|split('@')|first|split('.')|first|split('_')|first }} </p>
+                    {% if show_details or recents %}
+                        <p class="text-xs">
+                            {% if commentTimeDiff.y > 0 %}
+                                {{ commentTimeDiff.y }}
+                            {% elseif commentTimeDiff.m > 0 %}
+                                {{ commentTimeDiff.m }}mth
+                            {% elseif commentTimeDiff.d > 30 %}
+                                {{ commentTimeDiff.d // 30 }} mois
+                            {% elseif commentTimeDiff.d > 2 %}
+                                {{ commentTimeDiff.d }}d
+                            {% elseif commentTimeDiff.h > 1 %}
+                                {{ commentTimeDiff.h }}h
+                            {% else %}
+                                {{ commentTimeDiff.i }}m
+                            {% endif %}
+                         </p>
+                    {% endif %}
+                </div>
+                <div class="ml-auto">
+                    <img src="{{ asset('img/profils/moi2.jpg') }}" class="rounded-full mt-1.5" style="width: 32px; height:32px;" alt="profil picture">
+                </div>
+            </div>
+        </div>
+        {% set comments_displayed = comments_displayed + 1 %}
+    {% endif %}
+{% endfor %}

@@ -47,8 +47,12 @@
                     {% if app.request.attributes.get('_route') == 'micro_post_show' %}
                         <a href='{{ path('micro_post_edit', { post: post.id }) }}' class="mr-4 text-xl">✏️</a>
                     {% endif %}
-                    <a href='{{ path('micro_post_add') }}' class="mr-4 text-xl">💌</a>
-                    <a href="{# {{ path('login') }} #}" class="mr-2 pt-1 text-xs">Login || Registration</a>
+                    {% if app.user %}
+                        <a href='{{ path('micro_post_add') }}' class="mr-4 text-xl">💌</a>
+                        <a href="{{ path('logout') }}" class="mr-2 pt-1 text-xs">Logout</a>
+                    {% else %}
+                        <a href="{{ path('login') }}" class="mr-2 pt-1 text-xs">Login</a>
+                    {% endif %}
                     <div class="flex">
                         <button onclick='toggleTheme()'>
                             <span id="themeSymbol">     </span>

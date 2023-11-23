@@ -3,7 +3,7 @@
 {% set edit_or_create = update ?? 'New Post' %}
 
 {% block title %}
-    {{ edit_or_create }}
+    {{ edit_or_create }} {{ form.vars.value.title }}
 {% endblock %}
 
 {% block bread %}
@@ -15,37 +15,9 @@
 
 
 {% block body %}
-<div class='flex items-center justify-center mt-4'>
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-
-    <div>{{ form_errors(form) }}</div>
-
-    {% if attribute(_context, 'comment') is not defined %}
-        <div>
-            {{ form_label(form.title, 'Enter the title', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
-            {{ form_widget(form.title, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2'}}) }}
-            {{ form_errors(form.title) }}
-        </div>
+    {% if attribute(_context, 'update') is defined or attribute(_context, 'comment') is defined %}
+        {{ include('micro_post/_add_form.html.twig', {post: post}) }}
+    {% else %}
+        {{ include('micro_post/_add_form.html.twig') }}
     {% endif %}
-
-    <div>
-        <p>
-            {{ form_label(form.text, attribute(_context, 'comment') is defined ? 'Add your comment' : 'Fill your post', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
-            {{ form_widget(form.text, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2'}}) }}
-            {{ form_errors(form.text) }}
-        </p>
-    </div>
-
-    <div class="flex">
-        <div class="flex-grow"></div>
-        <div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:bg-blue-300 dark:hover:bg-blue-400 shadow-sm text-white rounded-md font-bold py-2 px-4 mt-1 -mb-2">
-                Save
-            </button>
-        </div>
-    </div>
-
-    {{ form_end(form) }}
-</div>
-
 {% endblock %}

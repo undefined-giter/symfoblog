@@ -31,20 +31,11 @@ class MicroPostRepository extends ServiceEntityRepository
     }
 
 
-    public function findLatestPostsWithComments(int $limit = 15): array
+    public function findLatestPosts(int $posts_to_fetch): array
     {
         return $this->createQueryBuilder('p')
-            ->setMaxResults($limit)
+            ->setMaxResults($posts_to_fetch)
             ->orderBy('p.created', 'DESC')
-            ->leftJoin('p.comments', 'c')
-            ->addSelect('c')
-            ->where(
-                'p.id IN (
-                    SELECT sub.id 
-                    FROM App\Entity\MicroPost sub 
-                    ORDER BY sub.created DESC
-                    )'
-            )
             ->getQuery()
             ->getResult();
     }
