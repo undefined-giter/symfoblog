@@ -44,3 +44,7 @@
         {% set comments_displayed = comments_displayed + 1 %}
     {% endif %}
 {% endfor %}
+
+{% if show_details %}
+    <p class='text-blue-500 text-sm text-right mt-3'>{{ comments_displayed }} {{ comments_displayed > 1 ? 'comments' : 'comment' }} on this post.</p>
+{% endif %}

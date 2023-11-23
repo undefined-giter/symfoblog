@@ -11,8 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 
 class MicroPostController extends AbstractController
 {
@@ -48,6 +48,7 @@ class MicroPostController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_EDITOR')]
     #[Route('/micro_post/add', name: 'micro_post_add', priority: 2)]
     public function add(Request $request, EntityManagerInterface $manager): Response
     {
@@ -73,6 +74,7 @@ class MicroPostController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_EDITOR')]
     #[Route('/micro_post/{post}/edit', name: 'micro_post_edit')]
     public function edit(MicroPost $post, Request $request, EntityManagerInterface $manager): Response
     {
@@ -99,6 +101,7 @@ class MicroPostController extends AbstractController
     }
 
     
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/micro_post/{id<\d+>}', name: 'micro_post_show')]
     public function showOne(int $id, MicroPostRepository $posts): Response
     {
@@ -115,6 +118,7 @@ class MicroPostController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_COMMENTER')]
     #[Route('/micro_post/{id}/comment', name: 'micro_post_comment')]
     public function addComment(MicroPost $post, MicroPostRepository $posts, Request $request, EntityManagerInterface $manager): Response
     {
