@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block bread %}Register{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class='w-full md:w-2/3 mx-auto mb-4 flex justify-between items-center'>
+            <div class="w-full md:w-2/3 mx-auto text-red-600" role="alert">{{ flash_error }}</div>
+        </div>
+    {% endfor %}
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm, {'attr': {'class': 'mx-12'}}) }}
+        <div class="mx-auto sm:w-1/2 w-full">
+            <div>
+                {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2', 'tabindex': '1'}}) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <div>
+                {{ form_label(registrationForm.plainPassword.first, 'Password', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2', 'tabindex': '1'}}) }}
+                {{ form_errors(registrationForm.plainPassword.first) }}
+            </div>
+            <div>
+                {{ form_label(registrationForm.plainPassword.second, 'Repeat it', {'label_attr': {'class': 'block text-sm text-gray-700 dark:text-gray-400 font-medium'}}) }}
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'block w-full shadow-sm border-gray-900 rounded-md border dark:border-transparent dark:text-gray-800 p-2 mt-1 mb-2', 'tabindex': '1'}}) }}
+                {{ form_errors(registrationForm.plainPassword.second) }}
+            </div>
+
+            <div>
+                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'h-4 w-4 rounded border-gray border text-indogo-300 mr-2'}}) }}
+                {{ form_label(registrationForm.agreeTerms, 'Agree to terms', {'label_attr': {'class': 'text-sm text-gray-700 dark:text-gray-300 font-medium'}}) }}
+            </div>
+
+            <div>
+                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-500 shadow-sm text-white rounded-md font-bold py-2">
+                    Register
+                </button>
+            </div>
+        </div>
+    {{ form_end(registrationForm) }}
+{% endblock %}

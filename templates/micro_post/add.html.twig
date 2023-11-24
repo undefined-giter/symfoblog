@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block bread %}
-    ➡️{{ edit_or_create }} {{ form.vars.value.id }}
+    {{ edit_or_create }} {{ form.vars.value.id }}
     {% if attribute(_context, 'update') is defined or attribute(_context, 'comment') is defined %}
         <a style='color:red; margin-left:15px;' href="{{ path('micro_post_show', {id: post.id}) }}">⛔Back to the Post</a>
     {% endif %}

@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\MicroPost;
 use App\Form\CommentType;
 use App\Form\MicroPostType;
+use App\Security\Voter\MicroPostVoter;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class MicroPostController extends AbstractController
 
 
     #[Route('/micro_post/recents', name: 'micro_post_recents')]
-    public function recents(MicroPostRepository $posts, $posts_to_fetch = 4): Response
+    public function recents(MicroPostRepository $posts, $posts_to_fetch = 15): Response
     {
         return $this->render('micro_post/index.html.twig', [
             'posts' => $posts->findLatestPosts($posts_to_fetch),
@@ -48,7 +49,7 @@ class MicroPostController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_EDITOR')]
+    #[IsGranted('ROLE_WRITER')]
     #[Route('/micro_post/add', name: 'micro_post_add', priority: 2)]
     public function add(Request $request, EntityManagerInterface $manager): Response
     {
@@ -74,7 +75,7 @@ class MicroPostController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_EDITOR')]
+    #[IsGranted(MicroPostVoter::EDIT, subject: 'post')]
     #[Route('/micro_post/{post}/edit', name: 'micro_post_edit')]
     public function edit(MicroPost $post, Request $request, EntityManagerInterface $manager): Response
     {
@@ -100,16 +101,16 @@ class MicroPostController extends AbstractController
         ]);
     }
 
-    
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/micro_post/{id<\d+>}', name: 'micro_post_show')]
-    public function showOne(int $id, MicroPostRepository $posts): Response
-    {
-        $post = $posts->find($id);
 
+    #[IsGranted(MicroPostVoter::VIEW, subject: 'post')]
+    #[Route('/micro_post/{id<\d+>}', name: 'micro_post_show')]
+    public function showOne(MicroPost $post): Response
+    {
         if (!$post) {
             throw $this->createNotFoundException('Post not found');
         }
+        
+        // if($this->security->isGranted('ROLE_ADMIN')) {return true};
 
         return $this->render('micro_post/show.html.twig', [
             'post' => $post,
@@ -118,7 +119,8 @@ class MicroPostController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_COMMENTER')]
+
+    #[IsGranted('ROLE_WRITER')]
     #[Route('/micro_post/{id}/comment', name: 'micro_post_comment')]
     public function addComment(MicroPost $post, MicroPostRepository $posts, Request $request, EntityManagerInterface $manager): Response
     {
