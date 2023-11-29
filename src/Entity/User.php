@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: MicroPost::class, mappedBy: 'likedBy')]
     private Collection $liked;
 
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: MicroPost::class)]
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: MicroPost::class, cascade: ['remove'])]
     private Collection $posts;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class)]

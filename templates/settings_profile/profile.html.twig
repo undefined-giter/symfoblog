@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}name profile{% endblock %}
+
+{% block bread %}
+    Profile settings
+{% endblock %}
+
+{% block body %}
+    <div class='mx-4'>
+        {{ form_start(form) }}
+            {{ include('settings_profile/_profile_form.html.twig') }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

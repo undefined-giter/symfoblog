@@ -45,12 +45,13 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Please enter a password',
                     ]),
                     new Length([
-                        'min' => 6,
+                        'min' => 4,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'max' => 4096,
+                        'max' => 50,
                     ]),
                 ],
             ])
+            ->add('userProfile', UserProfileType::class)
         ;
     }
 

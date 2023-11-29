@@ -30,6 +30,8 @@
                                 {{ commentTimeDiff.d }}d
                             {% elseif commentTimeDiff.h > 1 %}
                                 {{ commentTimeDiff.h }}h
+                            {% elseif commentTimeDiff.i < 1 %}
+                                À l'instant
                             {% else %}
                                 {{ commentTimeDiff.i }}m
                             {% endif %}
