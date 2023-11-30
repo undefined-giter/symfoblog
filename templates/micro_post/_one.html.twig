@@ -38,7 +38,14 @@
             &emsp;{{ post.text }}
         {% endif %}
     </p>
-    <p class='m-2'>&emsp;💗<span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>0</span></p>
+    <p class='m-2'>&emsp;
+        {% if post.likedBy.contains(app.user) %}
+            <a href="{{ path('unlike', {id: post.id}) }}">💗</a>
+        {% else %}
+            <a href="{{ path('like', {id: post.id}) }}">💗</a>
+        {% endif %}
+        <span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>{{ post.likedBy.count }}</span>
+    </p>
     {% if show_details %}
         <button class="w-full my-2 bg-purple-400 border-2 rounded hover:border-green-500">
             <a href="{{ path('micro_post_comment', {id: post.id}) }}" class="block w-full p-2 text-center text-white">

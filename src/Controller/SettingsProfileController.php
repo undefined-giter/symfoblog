@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,6 @@ class SettingsProfileController extends AbstractController
 {
     private EntityManagerInterface $manager;
 
-    // Injectez l'EntityManagerInterface dans le constructeur
     public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
@@ -26,10 +24,7 @@ class SettingsProfileController extends AbstractController
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/settings/profile', name: 'settings_profile')]
-    public function profile(
-        Request $request,
-        UserRepository $users,
-    ): Response {
+    public function profile(Request $request): Response {
         /** @var User $user */
         $user = $this->getUser();
         $userProfile = $user->getUserProfile() ?? new UserProfile();
