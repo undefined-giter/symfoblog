@@ -2,8 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-@tailwind utilities;
-
 *{cursor: default;}
 
 a:hover, a p:hover, a svg:hover{

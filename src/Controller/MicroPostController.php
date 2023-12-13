@@ -124,7 +124,7 @@ class MicroPostController extends AbstractController
     public function addComment(MicroPost $post, MicroPostRepository $posts, Request $request, EntityManagerInterface $manager): Response
     {
         if (!$this->isGranted('ROLE_WRITER')) {
-            $this->addFlash('warning','You need to verify your email first.');
+            $this->addFlash('warning','You need to fully authenticate first.');
             return $this->redirectToRoute('micro_post_recents');
         }
 
