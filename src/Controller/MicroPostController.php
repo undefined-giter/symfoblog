@@ -120,10 +120,14 @@ class MicroPostController extends AbstractController
 
 
 
-    #[IsGranted('ROLE_WRITER')]
     #[Route('/micro_post/{id}/comment', name: 'micro_post_comment')]
     public function addComment(MicroPost $post, MicroPostRepository $posts, Request $request, EntityManagerInterface $manager): Response
     {
+        if (!$this->isGranted('ROLE_WRITER')) {
+            $this->addFlash('warning','You need to verify your email first.');
+            return $this->redirectToRoute('micro_post_recents');
+        }
+
         $comment = new Comment();
         $comment->setCreatedAt(new \DateTimeImmutable());
         $form = $this->createForm(CommentType::class, $comment);

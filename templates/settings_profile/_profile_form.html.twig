@@ -32,5 +32,9 @@
 {{ form_widget(form.dateOfBirth, {'attr': {'class': 'block w-full shadow-sm border-gray-300 dark:border-transparent dark:text-gray-800 bg-white rounded-md border p-2 mt-1 mb-2'}}) }}
 
 <button type="submit" class="w-full bg-blue-700 hover:bg-blue-500 shadow-sm text-white rounded-md font-bold py-2">
-    Register
+    {% if app.request.attributes.get('_route') == 'register' %}
+        Register
+    {% else %}
+        Save
+    {% endif %}
 </button>

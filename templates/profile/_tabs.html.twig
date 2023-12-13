@@ -1,0 +1,32 @@
+<div class="mx-4">
+    {% embed 'shared/_tabs.html.twig' %}
+        {% block tabs %}
+            {% embed 'shared/_tab.html.twig' with { route: 'profile' } %}
+                {% block content %}
+                    <span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>{{ user.posts.count }} Posts</span>
+                {% endblock %}
+                {% block path %}
+                    {{ path('profile', {id: user.id}) }}
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'shared/_tab.html.twig' with { route: 'profile_follows', classes: '' } %}
+                {% block content %}
+                    <span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>{{ user.follows.count }} Follows</span>
+                {% endblock %}
+                {% block path %}
+                    {{ path('profile_follows', {id: user.id}) }}
+                {% endblock %}
+            {% endembed %}
+            
+            {% embed 'shared/_tab.html.twig' with { route: 'profile_followers', classes: '' } %}
+                {% block content %}
+                    <span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>{{ user.followers.count }} Followers</span>
+                {% endblock %}
+                {% block path %}
+                    {{ path('profile_followers', {id: user.id}) }}
+                {% endblock %}
+            {% endembed %}
+        {% endblock %}
+    {% endembed %}
+</div>

@@ -17,7 +17,13 @@
         <div class="flex justify-end">
             <div class="w-full flex items-start">
                 <div class="flex-grow overflow-hidden text-right">
-                    <p class="font-semibold text-purple-800 dark:text-purple-800 whitespace-nowrap">{{ comment.author.email|split('@')|first|split('.')|first|split('_')|first }} </p>
+                    <p class="font-semibold text-purple-800 dark:text-purple-800 whitespace-nowrap">
+                        {% if comment.author.userProfile.name is defined %}
+                            {{ comment.author.userProfile.name }}
+                        {% else %}
+                            {{ comment.author.email|split('@')|first|split('.')|first|split('_')|first }}
+                        {% endif %}
+                    </p>
                     {% if show_details or recents %}
                         <p class="text-xs">
                             {% if commentTimeDiff.y > 0 %}
@@ -39,7 +45,7 @@
                     {% endif %}
                 </div>
                 <div class="ml-auto">
-                    <img src="{{ asset('img/profils/moi2.jpg') }}" class="rounded-full mt-1.5" style="width: 32px; height:32px;" alt="profil picture">
+                    {{ include('shared/_avatar.html.twig', {'size': 42, profile: comment.author.userProfile, marginY: '' }) }}
                 </div>
             </div>
         </div>

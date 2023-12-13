@@ -29,7 +29,6 @@
         {# end tailwind #}
     </head>
     <body class='bg-gray-400 dark:bg-gray-900 text-black dark:text-gray-300'>
-
         {% block navbar %}
             <div class="flex justify-between items-center text-sm mx-4 pt-3">
                 <div class="flex items-center">
@@ -44,7 +43,7 @@
                     </div>
                 </div>
                 <div class="flex">
-                    {% if app.request.attributes.get('_route') == 'micro_post_show' and (post.getAuthor().getId() == app.user.id or 'ROLE_ADMIN' in app.user.roles) %}
+                    {% if app.request.attributes.get('_route') == 'micro_post_show' and app.user and (post.getAuthor().getId() == app.user.id or 'ROLE_ADMIN' in app.user.roles) %}
                         <a href='{{ path('micro_post_edit', { post: post.id }) }}' class="mr-4 text-xl">✏️</a>
                     {% endif %}
                     {% if app.user %}
@@ -53,13 +52,16 @@
                         {% else %}
                             <p class="mr-4 text-green-500"><small>-Verify your email to start posting-</small></p>
                         {% endif %}
-                        <a href="{{ path('logout') }}" class="mr-2 pt-1 text-xs">Logout</a>
+                        <a href="{{ path('settings_profile') }}" class="mr-2 pt-1 text-xs">
+                            {{ include('shared/_avatar.html.twig', {'size': 18, profile: app.user.userProfile, marginY: '' }) }}
+                        </a>
+                        <a href="{{ path('logout') }}" class="mr-2 pt-1 text-xs"><img src='{{ asset('img/exit.png') }}' width=22 class="cursor-pointer" /></a>
                     {% elseif app.request.attributes.get('_route') != 'login' %}
-                        <a href="{{ path('login') }}" class="mr-2 pt-1 text-xs">Login</a>
+                        <a href="{{ path('login') }}" class="cursor-pointer mr-2 pt-1 text-xs">Login</a>
                     {% endif %}
                     <div class="flex">
                         <button onclick='toggleTheme()'>
-                            <span id="themeSymbol">     </span>
+                            <span id="themeSymbol" class="hover:cursor-pointer">     </span>
                         </button>
                     </div>
                 </div>
@@ -102,6 +104,5 @@
         <script>
             {% block javascript %}{% endblock %}
         </script>
-        
     </body>
 </html>

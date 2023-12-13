@@ -1,0 +1,23 @@
+<div class="mx-4">
+    {% embed 'shared/_tabs.html.twig' %}
+        {% block tabs %}
+            {% embed 'shared/_tab.html.twig' with { route: 'settings_profile' } %}
+                {% block content %}
+                    <span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>Your profile settings</span>
+                {% endblock %}
+                {% block path %}
+                    {{ path('settings_profile') }}
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'shared/_tab.html.twig' with { route: 'settings_profile_image', classes: '' } %}
+                {% block content %}
+                    <span class='px-2 rounded-md bg-gray-200 dark:bg-gray-700'>Your profile image</span>
+                {% endblock %}
+                {% block path %}
+                    {{ path('settings_profile_image') }}
+                {% endblock %}
+            {% endembed %}
+        {% endblock %}
+    {% endembed %}
+</div>

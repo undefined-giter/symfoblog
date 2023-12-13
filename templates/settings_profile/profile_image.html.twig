@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Image Profile{% endblock %}
+
+{% block bread %}
+    Profile Picture
+{% endblock %}
+
+{% block body %}
+    <div class='mx-4'>
+        {{ include('settings_profile/_settings_profile_tabs.html.twig') }}
+        <div class='mt-8 mx-auto max-w-md'>
+            {{ include('shared/_avatar.html.twig', {'size': 126, profile: app.user.userProfile, marginY: '' }) }}
+            <br>
+            {{ form_start(form, {'attr': {'novalidate':'novalidate'}}) }}
+                {{ form_label(form.profileImage, 'Change', {'label_attr': {'class': 'shadow-sm border-transparent bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-900 cursor-pointer rounded-md border w-full text-center'}}) }}
+                {{ form_widget(form.profileImage, {'attr': {'class': 'hidden'}}) }}
+                {{ form_errors(form.profileImage) }}
+                
+                <br>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 dark:bg-blue-300 dark:hover:bg-blue-400 shadow-sm text-white rounded-md font-bold py-2 px-4 mt-1">
+                    Upload
+                </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

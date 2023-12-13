@@ -1,0 +1,27 @@
+{% if users|length > 0 %}
+    <div class="mx-12 mt-3 grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {% for otherUser in users %}
+            <div class="flex justify-between items-center bg-purple-500 dark:bg-purple-800 border-b rounded-md p-6">
+                <div class="flex items-center">
+                    {{ include('shared/_avatar.html.twig', {'size': 42, profile: app.user.userProfile, marginY: '' }) }}
+                    <a href="{{ path('profile', {id: otherUser.id}) }}">
+                        <p class="text-lg ml-2">{{ otherUser.userProfile.name ?? otherUser.email|split('@')|first|split('.')|first|split('_')|first|capitalize }}</p>
+                    </a>
+                </div>
+                <div class="flex items-center justify-center flex-1">
+                    {{ otherUser.posts.count }} {{ otherUser.posts.count == 0 ? 'No post yet' : otherUser.posts.count == 1 ? 'post' : 'posts' }}
+                </div>
+                <div class="ml-auto">
+                    {{ include('follower/_follow_button.html.twig', {userToFollow: otherUser}) }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="w-full text-center">
+        <div class='mt-8 font-bold text-gray-600 dark:text-gray-400'>
+            {{ user.userProfile.name ?? user.email|split('@')|first|split('.')|first|split('_')|first|capitalize }}
+            {{ app.request.attributes.get('_route') == 'profile_follows' ? 'follows no one yet.' : 'has no follower yet.' }}
+        </div>
+    </div>
+{% endif  %}
